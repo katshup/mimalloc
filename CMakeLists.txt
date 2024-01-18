@@ -4,6 +4,8 @@ project(libmimalloc C CXX)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
+set(MI_SECURE_LEVEL 4 CACHE STRING "Set the security level of MiMalloc if MI_SECURE is ON. Valid options are 1 -> 4")
+
 option(MI_SECURE            "Use full security mitigations (like guard pages, allocation randomization, double-free mitigation, and free-list corruption detection)" OFF)
 option(MI_DEBUG_FULL        "Use full internal heap invariant checking in DEBUG mode (expensive)" OFF)
 option(MI_PADDING           "Enable padding to detect heap block overflow (always on in DEBUG or SECURE mode, or with Valgrind/ASAN)" OFF)
@@ -127,7 +129,7 @@ endif()
 
 if(MI_SECURE)
   message(STATUS "Set full secure build (MI_SECURE=ON)")
-  list(APPEND mi_defines MI_SECURE=4)  
+  list(APPEND mi_defines MI_SECURE=${MI_SECURE_LEVEL})  
 endif()
 
 if(MI_TRACK_VALGRIND)
