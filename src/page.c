@@ -597,7 +597,7 @@ static mi_decl_noinline void mi_page_free_list_extend( mi_page_t* const page, co
 
 #define MI_MAX_EXTEND_SIZE    (4*1024)      // heuristic, one OS page seems to work well.
 #if (MI_SECURE>0)
-#define MI_MIN_EXTEND         (8*MI_SECURE) // extend at least by this many
+#define MI_MIN_EXTEND         (4*MI_SECURE) // extend at least by this many
 #else
 #define MI_MIN_EXTEND         (4)
 #endif
@@ -770,16 +770,7 @@ static inline mi_page_t* mi_find_free_page(mi_heap_t* heap, size_t size) {
   mi_page_queue_t* pq = mi_page_queue(heap,size);
   mi_page_t* page = pq->first;
   if (page != NULL) {
-   #if (MI_SECURE>=3) // in secure mode, we extend half the time to increase randomness
-    if (page->capacity < page->reserved && ((_mi_heap_random_next(heap) & 1) == 1)) {
-      mi_page_extend_free(heap, page, heap->tld);
-      mi_assert_internal(mi_page_immediate_available(page));
-    }
-    else
-   #endif
-    {
-      _mi_page_free_collect(page,false);
-    }
+    _mi_page_free_collect(page,false);
 
     if (mi_page_immediate_available(page)) {
       page->retire_expire = 0;
