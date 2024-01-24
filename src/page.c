@@ -597,7 +597,7 @@ static mi_decl_noinline void mi_page_free_list_extend( mi_page_t* const page, co
 
 #define MI_MAX_EXTEND_SIZE    (4*1024)      // heuristic, one OS page seems to work well.
 #if (MI_SECURE>0)
-#define MI_MIN_EXTEND         (4*MI_SECURE) // extend at least by this many
+#define MI_MIN_EXTEND         (8*MI_SECURE) // extend at least by this many
 #else
 #define MI_MIN_EXTEND         (4)
 #endif
